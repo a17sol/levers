@@ -1,0 +1,119 @@
+from math import sin, cos, hypot, sqrt, pi
+from typing import Callable
+
+from .types import *
+from .geometry import *
+ 
+
+def static(x: float, y: float) -> Motion:
+	def f(t: Time) -> Position:
+		return (x, y)
+	return f
+
+def rotating(x: float, y: float, r: float, f: float) -> Motion:
+	def func(t: Time) -> Position:
+		common = 2 * pi * t * f
+		return (r * sin(common) + x, r * cos(common) + y)
+	return func
+
+def ll_intersect(a: Line, b: Line) -> Motion:
+	def f(t: Time) -> Position:
+		z = a.a * b.b - b.a * a.b
+		if z == 0:
+			raise ValueError("Lines do not intersect or are identical.")
+		x = (a.b * b.c - b.b * a.c) / z
+		y = (b.a * a.c - a.a * b.c) / z
+		return (x, y)
+	return f
+
+def default_selector(a: Position, b: Position) -> Position:
+	return min((a, b), key=lambda x: (x[1], x[0]))
+
+def cl_intersect(circ: Circle, line: Line, selector: Selector = default_selector) -> Motion:
+	def f(t: Time) -> Position:
+		a, b, c = line.a, line.b, line.c
+		r, v, w = circ.radius, circ.center.x, circ.center.y
+		
+		if a != 0:
+			z = -a**2*(-a**2*r**2+a**2*v**2+2*a*b*v*w+2*a*c*v-b**2*r**2+b**2*w**2+2*b*c*w+c**2)
+			if z < 0:
+				raise RuntimeError("Line and circle do not intersect.")
+			y1 = (sqrt(z)+a**2*w-a*b*v-b*c)/(a**2+b**2)
+			y2 = (-sqrt(z)+a**2*w-a*b*v-b*c)/(a**2+b**2)
+			x1 = -(b*y1+c)/a
+			x2 = -(b*y2+c)/a
+		
+		else:
+			z = -b**2*(b**2*(w**2-r**2)+2*b*c*w+c**2)
+			if z < 0:
+				raise RuntimeError("Line and circle do not intersect.")
+			x1 = v-sqrt(z)/b**2
+			x2 = (sqrt(z)+b**2*v)/b**2
+			y1 = -(a*x1+c)/b
+			y2 = -(a*x2+c)/b
+		
+		return selector((x1, y1), (x2, y2))
+
+	return f
+
+def cc_intersect(a: Circle, b: Circle, selector: Selector = default_selector) -> Motion:
+	def f(t: Time) -> Position:
+		r2, v, w = a.radius**2, a.center.x, a.center.y
+		R2, V, W = b.radius**2, b.center.x, b.center.y
+		dv = v - V
+		dw = w - W
+
+		if dv == 0 and dw == 0:
+			raise RuntimeError("Cannot find intersection of concentric circles")
+
+		elif dw != 0:
+			d = 2 * ((dv)**2 + (dw)**2)
+			z = -dw**2 * ((r2 - R2)**2 - 2 * (r2 + R2 - dw**2) * dv**2 + dv**4 + dw**4 - 2 * (r2 + R2) * dw**2)
+
+			if z < 0:
+				raise RuntimeError("Circles do not intersect")
+
+			x_common = (R2 - r2 + v**2 - V**2) * (dv) + (v + V)*dw**2
+			x1 = (x_common - sqrt(z)) / d
+			x2 = (x_common + sqrt(z)) / d
+
+			y_common = (R2 - r2) * dw**2 + (w**2 - W**2) * dv**2 + dw**3 * (w + W)
+			y1 = (y_common + dv * sqrt(z)) / (dw * d)
+			y2 = (y_common - dv * sqrt(z)) / (dw * d)
+
+		else:
+			x = x1 = x2 = (R2 - r2 + v**2 - V**2) / (2 * dv)
+
+			z = 2*v*x - x**2 + r2 - v**2
+
+			if z < 0:
+				raise RuntimeError("Circles do not intersect")
+
+			y1 = w - sqrt(z)
+			y2 = w + sqrt(z)
+
+		return selector((x1, y1), (x2, y2))
+
+	return f
+
+def intersect(a: Circle | Line, b: Circle | Line, selector: Selector = default_selector) -> Motion:
+	if isinstance(a, Circle) and isinstance(b, Circle):	
+		return cc_intersect(a, b, selector)
+	elif isinstance(a, Line) and isinstance(b, Line):
+		return ll_intersect(a, b)
+	elif isinstance(a, Circle) and isinstance(b, Line):
+		return cl_intersect(a, b, selector)
+	elif isinstance(a, Line) and isinstance(b, Circle):
+		return cl_intersect(b, a, selector)
+	else:
+		raise ValueError(
+			f"Can only intersect lines and circles, got {type(a).__name__} and {type(b).__name__}"
+		)
+
+def oncont(a: Point, b: Point, dist: float) -> Motion:
+	def f(t: Time) -> Position:
+		dx = b.x - a.x
+		dy = b.y - a.y
+		k = dist / hypot(dx, dy)
+		return (dx * k + b.x, dy * k + b.y)
+	return f
