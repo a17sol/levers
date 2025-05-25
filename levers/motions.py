@@ -96,7 +96,7 @@ def cc_intersect(a: Circle, b: Circle, selector: Selector = default_selector) ->
 
 	return f
 
-def intersect(a: Circle | Line, b: Circle | Line, selector: Selector = default_selector) -> Motion:
+def on_intersection(a: Circle | Line, b: Circle | Line, selector: Selector = default_selector) -> Motion:
 	if isinstance(a, Circle) and isinstance(b, Circle):	
 		return cc_intersect(a, b, selector)
 	elif isinstance(a, Line) and isinstance(b, Line):
@@ -110,10 +110,12 @@ def intersect(a: Circle | Line, b: Circle | Line, selector: Selector = default_s
 			f"Can only intersect lines and circles, got {type(a).__name__} and {type(b).__name__}"
 		)
 
-def oncont(a: Point, b: Point, dist: float) -> Motion:
+def on_line(a: Point, b: Point, dist_from_a: float) -> Motion:
+	if a.x == b.x and a.y == b.y:
+		raise ValueError('A line cannot be defined by two coincident points')
 	def f(t: Time) -> Position:
 		dx = b.x - a.x
 		dy = b.y - a.y
-		k = dist / hypot(dx, dy)
-		return (dx * k + b.x, dy * k + b.y)
+		k = dist_from_a / hypot(dx, dy)
+		return (dx * k + a.x, dy * k + a.y)
 	return f
