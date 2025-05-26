@@ -1,6 +1,7 @@
+from levers.renderers import PyQtGraphRenderer
 from levers.geometry import *
 from levers.motions import *
-from levers.renderers import PyQtGraphRenderer
+from levers.selectors import *
 
 
 p1 = Point(rotating(x=0, y=0, r=2, f=0.25))
