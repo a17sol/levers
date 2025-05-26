@@ -1,6 +1,7 @@
 from levers.renderers import PyQtGraphRenderer
 from levers.geometry import *
 from levers.motions import *
+from levers.selectors import *
 
 
 red_point = Style(visible=True, color='r', width=10)
