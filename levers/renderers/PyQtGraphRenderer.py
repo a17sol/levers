@@ -6,7 +6,7 @@ from pyqtgraph.exporters import ImageExporter
 from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QGraphicsEllipseItem
 
-from ..geometry import *
+from ..geometry import Point, Line, Circle, Trail
 from .Renderer import Renderer
 
 
@@ -25,7 +25,7 @@ class PyQtGraphRenderer(Renderer):
 
     def run(self, fps: float) -> None:
         self.start_time = time()
-        self.mspf = int(1000 / fps) - 1
+        self.mspf = int(1000 / fps)
 
         self.next_frame_run()
         pg.exec()

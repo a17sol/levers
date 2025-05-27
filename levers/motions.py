@@ -1,12 +1,13 @@
 from math import sin, cos, hypot, sqrt, pi
 from typing import Callable
 
-from .types import *
-from .geometry import *
-from .selectors import *
+from .types import Time, Position, Motion, Selector
+from .geometry import Point, Line, Circle
+from .selectors import lower_left as default_selector
 
 
-default_selector = lower_left
+__all__ = ['static', 'rotating', 'on_intersection', 'on_line']
+
 
 def static(x: float, y: float) -> Motion:
 	def f(t: Time) -> Position:

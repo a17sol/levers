@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-from ..geometry import *
-from ..types import *
+from ..geometry import Shape, Point, Line, Circle, Trail
+from ..types import Time
 
 
 class Renderer(ABC):

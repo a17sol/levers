@@ -3,7 +3,10 @@ from abc import ABC, abstractmethod
 from typing import ClassVar
 from collections import deque
 
-from .types import *
+from .types import Time, Motion, Color
+
+
+__all__ = ['Style', 'Point', 'Circle', 'Line', 'Trail']
 
 
 class Style:

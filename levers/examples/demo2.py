@@ -1,7 +1,5 @@
+from levers import *
 from levers.renderers import PyQtGraphRenderer
-from levers.geometry import *
-from levers.motions import *
-from levers.selectors import *
 
 
 p1 = Point(rotating(x=0, y=0, r=2, f=0.25))
@@ -14,6 +12,7 @@ p5 = Point(static(x=0, y=0))
 Line(p1, p4)
 Line(p2, p3)
 Line(p1, p5)
-Trail(p4, 240)
+Trail(p4, 241)
 
 PyQtGraphRenderer(-4, 11, -3, 12, 30).run(60)
+# PyQtGraphRenderer(-4, 11, -3, 12, 30).capture(fps=60, frames=240, path='capture_folder')
