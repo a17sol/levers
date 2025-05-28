@@ -43,7 +43,7 @@ def closest_to(o: Position|Point) -> Selector:
 			return min(a, b, key = lambda x: hypot(x[0] - o[0], x[1] - o[1]))
 	else:
 		raise TypeError(
-			f'Unsupported argument type. Expected: Position or Point, got: : {type(o).__name__}'
+			f'Unsupported argument type. Expected: Position or Point, got: {type(o).__name__}'
 		)
 	return f
 
