@@ -30,8 +30,10 @@ classifiers = [
 
 [project.optional-dependencies]
 pyqt = ["PyQt6", "pyqtgraph"]
+pygame = ["pygame"]
 all = [
-  "PyQt6", "pyqtgraph"
+  "PyQt6", "pyqtgraph",
+  "pygame"
 ]
 
 [project.urls]
