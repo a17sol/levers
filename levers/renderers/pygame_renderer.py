@@ -4,7 +4,7 @@ import pygame
 
 from ..geometry import Point, Line, Circle, Trail
 from ..types import Position, Time
-from .Renderer import Renderer
+from .renderer import Renderer
 
 
 class PyGameRenderer(Renderer):

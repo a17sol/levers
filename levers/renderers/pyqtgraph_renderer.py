@@ -7,7 +7,7 @@ from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import QGraphicsEllipseItem
 
 from ..geometry import Point, Line, Circle, Trail
-from .Renderer import Renderer
+from .renderer import Renderer
 
 
 class PyQtGraphRenderer(Renderer):
