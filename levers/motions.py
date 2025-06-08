@@ -6,7 +6,7 @@ from .geometry import Point, Line, Circle
 from .selectors import lower_left as default_selector
 
 
-__all__ = ['static', 'rotating', 'on_intersection', 'on_line', 'on_angle_side']
+__all__ = ['static', 'rotating', 'sliding', 'on_intersection', 'on_line', 'on_angle_side']
 
 
 def static(x: float, y: float) -> Motion:
@@ -18,6 +18,16 @@ def rotating(x: float, y: float, r: float, f: float) -> Motion:
 	def func(t: Time) -> Position:
 		common = 2 * pi * t * f
 		return (r * sin(common) + x, r * cos(common) + y)
+	return func
+
+def sliding(x1: float, y1: float, x2: float, y2: float, f: float) -> Motion:
+	def func(t: Time) -> Position:
+		mid_x = (x1 + x2) / 2
+		mid_y = (y1 + y2) / 2
+		dx = x2 - x1
+		dy = y2 - y1
+		common = cos(2 * pi * t * f) / 2
+		return (dx * common + mid_x, dy * common + mid_y)
 	return func
 
 def ll_intersect(a: Line, b: Line) -> Motion:
