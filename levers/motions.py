@@ -1,4 +1,4 @@
-from math import sin, cos, hypot, sqrt, pi
+from math import sin, cos, hypot, sqrt, pi, radians
 from typing import Callable
 
 from .types import Time, Position, Motion, Selector
@@ -6,7 +6,7 @@ from .geometry import Point, Line, Circle
 from .selectors import lower_left as default_selector
 
 
-__all__ = ['static', 'rotating', 'on_intersection', 'on_line']
+__all__ = ['static', 'rotating', 'on_intersection', 'on_line', 'on_angle_side']
 
 
 def static(x: float, y: float) -> Motion:
@@ -119,4 +119,18 @@ def on_line(a: Point, b: Point, dist_from_a: float) -> Motion:
 		dy = b.y - a.y
 		k = dist_from_a / hypot(dx, dy)
 		return (dx * k + a.x, dy * k + a.y)
+	return f
+
+def on_angle_side(a: Point, b: Point, angle_deg: float, dist_from_a: float) -> Motion:
+	if a.x == b.x and a.y == b.y:
+		raise ValueError('An angle side cannot be defined by two coincident points')
+	def f(t: Time) -> Position:
+		dx = b.x - a.x
+		dy = b.y - a.y
+		length = hypot(dx, dy)
+		ux, uy = dx / length, dy / length
+		theta = radians(angle_deg)
+		rx = ux * cos(theta) - uy * sin(theta)
+		ry = ux * sin(theta) + uy * cos(theta)
+		return (a.x + dist_from_a * rx, a.y + dist_from_a * ry)
 	return f
