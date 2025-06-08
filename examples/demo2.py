@@ -12,7 +12,12 @@ p5 = Point(static(x=0, y=0))
 Line(p1, p4)
 Line(p2, p3)
 Line(p1, p5)
-Trail(p4, 241)
+Trail(p1, length=241)
+Trail(
+	p4, length=30, step=8,
+	line_style=Style(width=1, color='#FF0000FF', visible=False),
+	point_style=Style(width=4, color='#FF0000FF', visible=True),
+)
 
 PyQtGraphRenderer(-4, 11, -3, 12, 30).run(60)
 # PyQtGraphRenderer(-4, 11, -3, 12, 30).capture(fps=60, frames=240, path='capture_folder')

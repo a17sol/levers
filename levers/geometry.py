@@ -67,15 +67,26 @@ class Line(Shape):
 
 
 class Trail(Shape):
-	default_style: ClassVar[Style] = Style(color="#FFFF00FF", width=1, visible=True)
+	default_line_style: ClassVar[Style] = Style(color="#FFFF00FF", width=1, visible=True)
+	default_point_style: ClassVar[Style] = Style(color="#FFFF00FF", width=1, visible=False)
 
-	def __init__(self, point: Point, length: int, style: Style = default_style) -> None:
+	def __init__(
+		self, point: Point, length: int, step: int = 1,
+		line_style: Style = default_line_style,
+		point_style: Style = default_point_style
+	) -> None:
 		super().__init__()
 		self.point = point
-		self.style = style
+		self.step = step
+		self.line_style = line_style
+		self.point_style = point_style
 		self.history = {'x': deque(maxlen=length), 'y': deque(maxlen=length)}
+		self.counter = -1
 		self.refresh(0)
 
 	def refresh(self, t: Time) -> None:
+		self.counter = (self.counter + 1) % self.step
+		if self.counter != 0:
+			return
 		self.history['x'].append(self.point.x)
 		self.history['y'].append(self.point.y)

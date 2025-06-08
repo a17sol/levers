@@ -85,15 +85,22 @@ class PyGameRenderer(Renderer):
 		)
 
 	def draw_trail(self, trail: Trail) -> None:
-		if trail.style.visible == False:
-			return
-		pygame.draw.lines(
-			self.trail_layer,
-			pygame.Color(trail.style.color),
-			False,
-			tuple(self.screen_coords(*c) for c in zip(*trail.history.values())),
-			trail.style.width
-		)
+		if trail.line_style.visible:
+			pygame.draw.lines(
+				self.trail_layer,
+				pygame.Color(trail.line_style.color),
+				False,
+				tuple(self.screen_coords(*c) for c in zip(*trail.history.values())),
+				trail.line_style.width
+			)
+		if trail.point_style.visible:
+			for c in zip(*trail.history.values()):
+				pygame.draw.circle(
+					self.trail_layer,
+					pygame.Color(trail.point_style.color),
+					self.screen_coords(*c),
+					trail.point_style.width/2
+				)
 
 	def draw_grid(self, surface: pygame.Surface) -> None:
 		screen_x, screen_y = self.screen.get_size()

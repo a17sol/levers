@@ -97,9 +97,17 @@ class PyQtGraphRenderer(Renderer):
         self.plt.addItem(p_ellipse)
 
     def draw_trail(self, trail: Trail) -> None:
-        if trail.style.visible == False:
+        if not trail.line_style.visible and not trail.point_style.visible:
             return
+        if trail.line_style.visible:
+            pen = pg.mkPen(trail.line_style.color, width=trail.line_style.width)
+        else:
+            pen = None
         self.plt.plot(
             trail.history, 
-            pen=pg.mkPen(trail.style.color, width=trail.style.width)
+            pen=pen,
+            symbol='o' if trail.point_style.visible else None,
+            symbolPen=None,
+            symbolBrush=trail.point_style.color,
+            symbolSize=trail.point_style.width
         ).setZValue(-0.5)
