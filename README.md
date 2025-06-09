@@ -14,6 +14,8 @@ It lets you describe a moving mechanism or geometric construction in just a few 
 
 ## Renderers and Installation
 
+Requires Python 3.12+.
+
 Although the project core has no external dependencies, vizualisation is performed via renderer plugins, each with its own requirements. You can choose optional dependencies at installation depending on the renderer you plan to use.
 
 Currently, the package includes two renderer plugins:
